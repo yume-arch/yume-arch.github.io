@@ -462,6 +462,8 @@
   ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
   /* ===== ANIMATIONS ===== */
+  @keyframes colonBlink{0%,100%{opacity:1}50%{opacity:0}}
+
   .fade-in{opacity:0;animation:fadeIn .6s ease .1s forwards}
   @keyframes fadeIn{to{opacity:1}}
 
@@ -481,7 +483,7 @@
   <div class="login-wrap">
     <div class="login-logo fade-in">
       <div class="mono">Private Access</div>
-      <h1>For You,<br></h1>
+      <h1>For You<br></h1>
       <div class="tagline">Hanya untuk yang tahu namanya ✦</div>
     </div>
 
@@ -522,7 +524,13 @@
 
     <!-- HERO -->
     <div class="hero fade-in">
-      <div class="hero-eyebrow">♫ Curated for you</div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.5rem;">
+        <div class="hero-eyebrow">♫ Curated for you</div>
+        <div style="text-align:right;">
+          <div id="clock" style="font-size:1.6rem;font-weight:600;letter-spacing:.05em;color:var(--text);line-height:1;font-variant-numeric:tabular-nums;">00:00</div>
+          <div id="clock-date" style="font-size:10px;color:var(--muted);letter-spacing:.08em;margin-top:3px;"></div>
+        </div>
+      </div>
       <h2 class="hero-title">The <em>Playlist</em><br>— buat Kakk</h2>
       <div class="hero-sub">Lagu-lagu yang ngingetin aku ke Kakak ✦</div>
     </div>
@@ -577,7 +585,6 @@
         <p>Maaf ya cuma bisa lewat web, soalnya kalau ketemu langsung, <span class="letter-highlight">sistemku suka mendadak nge-lag / error kalau deket Kakak.</span> Hihihi.</p>
       </div>
     </div>
-   
 
     <div class="letter-sign">
       <div class="from">— dari,</div>
@@ -604,84 +611,4 @@
 // ===== DATA PLAYLIST =====
 const tracks = [
   {emoji:'🌸',name:'Terlalu Lama',artist:'Viera',note:'Ini relate banget sama perasaan aku',embedId:'track/64004K6OpNt3gI3LtXYC7n'},
-  {emoji:'💫',name:'I Wish You Were Mine',artist:'Loving Caliber',note:'Dengerin ini sambil mikirin Kakak',embedId:'track/4SwZGwJIUM1l3o4ExTxWt1'},
-  {emoji:'🌊',name:'Karna Su Sayang',artist:'Near',note:'Yang ini buat Kak, beneran',embedId:'album/0IxEYwoAExmYK7GbNsBuvb'},
-];
-
-// ===== SPOTIFY EMBED ENGINE =====
-let currentTrack = 0;
-
-function renderPlaylist(){
-  const c=document.getElementById('playlist-items');
-  c.innerHTML=tracks.map((t,i)=>`
-    <div class="track-item${i===0?' playing':''}" id="ti-${i}" onclick="playTrack(${i})">
-      <span class="track-num" id="tn-${i}">${i===0?'<div class="eq-bars"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>':i+1}</span>
-      <div class="track-cover">${t.emoji}</div>
-      <div class="track-info">
-        <div class="track-name">${t.name}</div>
-        <div class="track-artist">${t.artist}</div>
-      </div>
-      <span class="track-tag">▶ NOW</span>
-    </div>
-  `).join('');
-}
-
-function playTrack(i){
-  document.querySelectorAll('.track-item').forEach(el=>el.classList.remove('playing'));
-  document.querySelectorAll('.track-num').forEach((el,idx)=>el.innerHTML=idx+1);
-
-  currentTrack=i;
-  const t=tracks[i];
-
-  // Ganti Spotify embed
-  const iframe=document.getElementById('spotify-iframe');
-  iframe.src=`https://open.spotify.com/embed/${t.embedId}?utm_source=generator&theme=0`;
-
-  document.getElementById('ti-'+i).classList.add('playing');
-  document.getElementById('tn-'+i).innerHTML='<div class="eq-bars"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>';
-  document.getElementById('ti-'+i).scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-// ===== LOGIN =====
-const VALID=['maria tabita','maria','kak maria','tabita','maria tabita'];
-function tryLogin(){
-  const val=document.getElementById('inp-name').value.trim().toLowerCase();
-  const err=document.getElementById('login-err');
-  if(!val)return;
-  if(VALID.includes(val)){
-    err.style.display='none';
-    doTransition();
-  }else{
-    err.style.display='block';
-    document.querySelector('.login-form').classList.remove('login-shake');
-    void document.querySelector('.login-form').offsetWidth;
-    document.querySelector('.login-form').classList.add('login-shake');
-  }
-}
-
-function doTransition(){
-  const ov=document.getElementById('overlay');
-  ov.classList.add('show');
-  setTimeout(()=>{
-    document.getElementById('page-login').classList.remove('active');
-    document.getElementById('page-main').classList.add('active');
-    renderPlaylist();
-    setTimeout(()=>ov.classList.remove('show'),600);
-  },800);
-}
-
-// ===== TABS =====
-function switchTab(tab,btn){
-  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('tab-playlist').classList.toggle('active',tab==='playlist');
-  document.getElementById('tab-letter').classList.toggle('active',tab==='letter');
-}
-
-// Enter key login
-document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&document.getElementById('page-login').classList.contains('active'))tryLogin();
-});
-</script>
-</body>
-</html>
+  {emoji:'💫',name:'I Wish You Were Mine',artist:'Loving Caliber',note:'Dengerin ini sambil mikirin Kakak',embedId:'track/4SwZGwJIU
